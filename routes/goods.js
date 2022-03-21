@@ -13,7 +13,7 @@ router.get("/goods/cart", async (req, res) => {
   console.log(goods)
 
   res.json({
-      carts: carts.map((cart) => ({
+      cart: carts.map((cart) => ({
                   quantity: cart.quantity,
                   goods: goods.find((item) => item.goodsId === cart.goodsId)
       })),
@@ -46,12 +46,12 @@ router.get("/goods", async (req, res) => {
 router.get("/goods/:goodsId", async (req, res) => {   // :뒤에 아무값이나 입력 받겠다, 받는 아무값을 goodsId라고 부르겠다 라는 느낌
   const { goodsId } = req.params;
 
-  const [detail] = await Goods.find({ goodsId: Number(goodsId) })
+  const [goods] = await Goods.find({ goodsId: Number(goodsId) })
 
   // const [detail]= goods.filter((item) => item.goodsId === Number(goodsId))    // distructuring, 구조화 [detail] => detail2, detail3추가하면 여러개를 가져올 수 있다. 1번째 2번째 3번째 개념인듯
 
   res.json({
-    detail,
+    goods,
   })
 });
 
@@ -99,10 +99,10 @@ router.put("/goods/:goodsId/cart", async (req, res) => {
 
   const existCarts = await Cart.find({goodsId: Number(goodsId)});
   if (!existCarts.length) {
-    return res.status(400).json({ success: false, errorMessage: "장바구니에 해당상품이 없습니다."});
+    await Cart.create({goodsId: Number(goodsId), quantity});
+  } else {
+    await Cart.updateOne({ goodsId: Number(goodsId)}, {$set: {quantity}});
   }
-
-  await Cart.updateOne({ goodsId: Number(goodsId)}, {$set: {quantity}});
 
   res.json({ success: true}); //응답을 안해주면 무! 한! 로! 딩! 
 

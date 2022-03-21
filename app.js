@@ -15,10 +15,10 @@ const requestMiddleware = (req, res, next) => {
 
 
 // app.use((req, res, next) => {   //미들웨어를 사용할수 있게 작성하는것 (순서에 따라 실행되기 때문에 위치가 중요하다.)
-//     // console.log("미들웨어가 구현됐나????");
-//     // next(); // 다음 미들웨어러 넘어기게 하는 다리 같은것, next 가 없으면 app.get이 돌아가지 않아 무한로딩 된다.
-//     // res.send("미들웨어의 응답입니다");
-//     // console.log("주소는?", req.path);
+    // console.log("미들웨어가 구현됐나????");
+    // next(); // 다음 미들웨어러 넘어기게 하는 다리 같은것, next 가 없으면 app.get이 돌아가지 않아 무한로딩 된다.
+    // res.send("미들웨어의 응답입니다");
+    // console.log("주소는?", req.path);
 //     if (req.path === "/test") {
 //         res.send("테스트 주소로 왔구나!");
 //     }else {
@@ -26,7 +26,9 @@ const requestMiddleware = (req, res, next) => {
 //     }
 // });  
 
+app.use(express.static("static"));
 app.use(express.json());    // body로 들어오는 json형태의 정보를 파싱 해주는 함수
+app.use(express.urlencoded());
 app.use(requestMiddleware);
 
 app.use("/api", [goodsRouter])
